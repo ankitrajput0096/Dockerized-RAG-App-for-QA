@@ -64,10 +64,10 @@ cd RAG-Document-QA
    ```bash
    docker-compose up
    ```
-### Directly running RAG Application docker image
+### Directly running RAG Application docker image 
 1. Start the Docker containers:
    ```bash
-   docker-compose up
+   docker-compose -f docker-compose-run.yml up
    ```
 
 ## Interacting with the RAG Application
