@@ -1,0 +1,10 @@
+services:
+  flask-server:
+    build:
+      context: .  # Build the Dockerfile in the current directory
+    container_name: flask-server
+    ports:
+      - "8090:8090"  # Map port 5000 of the container to port 5000 on the host
+    # volumes:
+    #   - ./input:/app  # Mount the input directory to /app in the container
+    restart: unless-stopped  # Ensure the container restarts automatically if it stops
