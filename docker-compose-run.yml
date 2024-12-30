@@ -1,9 +1,13 @@
 services:
   flask-server:
-    image: ankitrajput/rag-stack-docker:latest
+    image: ankitrajput/rag-stack-docker:v1
     container_name: flask-server
     ports:
-      - "8090:8090"  # Map port 5000 of the container to port 5000 on the host
-    # volumes:
-    #   - ./input:/app  # Mount the input directory to /app in the container
-    restart: unless-stopped  # Ensure the container restarts automatically if it stops
+      - "8090:8090" 
+    restart: unless-stopped
+  react_app:
+    image: ankitrajput/rag-stack-frontend:v1
+    ports:
+      - "9000:9000"
+    depends_on:
+      - flask-server
