@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # Import Flask-CORS
 import os
 import subprocess
 import time
@@ -10,6 +11,7 @@ from langchain.chains import RetrievalQA
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.document_loaders import TextLoader
+from langchain.schema import Document 
 
 # Set up environment variables
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -32,9 +34,10 @@ embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 # Flask app
 app = Flask(__name__)
 
+# Enable CORS
+CORS(app, resources={r"/*": {"origins": "*"}})  # Allows requests from any origin. Adjust as needed.
+
 vectorstore = None
-
-
 
 @app.route('/upload_document', methods=['POST'])
 def upload_and_index_document():
@@ -97,14 +100,49 @@ def ask_general_query():
     if not query:
         return jsonify({"error": "Query is required."}), 400
     try:
-
         print(f"user asked query is: {query}")
-
         result = llm.generate([query])
         text_response = result.generations[0][0].text  # Adjust indexing based on actual structure
         return jsonify({"response": text_response})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route('/text_and_query', methods=['POST'])
+def text_and_query():
+    global vectorstore
+    request_data = request.json
+    text = request_data.get('text')
+    query = request_data.get('query')
+
+    if not text:
+        return jsonify({"error": "Text is required."}), 400
+    if not query:
+        return jsonify({"error": "Query is required."}), 400
+
+    try:
+        # Step 1: Create a Document object
+        documents = [Document(page_content=text, metadata={})]  # Ensure it's a list of Document objects
+
+        # Step 2: Split the document into smaller chunks
+        texts = text_splitter.split_documents(documents)  # Split into chunks
+
+        # Step 3: Index the chunks into ChromaDB
+        vectorstore = Chroma.from_documents(texts, embeddings, persist_directory="./chroma_db")
+
+        print("uploading of text document content done !!")
+
+        # Step 4: Query the indexed content
+        qa_chain = RetrievalQA.from_chain_type(
+            llm=llm,
+            chain_type="stuff",
+            retriever=vectorstore.as_retriever(search_kwargs={"k": 3}),
+        )
+        result = qa_chain.run(query)
+
+        return jsonify({"answer": result, "message": "Text processed and query executed successfully."})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     try:

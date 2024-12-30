@@ -25,13 +25,14 @@ RUN pip install \
     sentence_transformers==2.2.2 \
     chromadb==0.4.0 \
     huggingface_hub==0.23.5 \
-    flask==2.3.2
+    flask==2.3.2 \
+    flask-cors==3.0.10
 
 # Set the working directory to /app
 WORKDIR /app
 
 # Copy the application code to the container
-COPY input /app/
+COPY /RAG_Back/input /app/
 
 # Expose the Flask port
 EXPOSE 8090
