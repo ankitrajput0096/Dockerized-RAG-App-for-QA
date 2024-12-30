@@ -1,60 +1,84 @@
+# QueryPal - Your Personalized AI Companion
+**Built with LLAMA 2 (via Ollama), ChromaDB, Docker, Flask, React, and Redux**
 
-# RAG Document Q&A using LLAMA 2 (via Ollama), ChromaDB, and Docker
+---
 
 ## Overview
 
-This project demonstrates the creation of a **Retrieval-Augmented Generation (RAG)** system utilizing Meta's Llama 2.0 model (integrated via **Ollama**), ChromaDB for vector storage, and LangChain for pipeline management. The system facilitates efficient document retrieval, general queries, and question answering (QA) by integrating retrieval capabilities with LLMs, enabling responses to queries about documents not part of the LLM's training data or even general questions.
+QueryPal is a **Retrieval-Augmented Generation (RAG)** system that leverages Meta's Llama 2.0 model (via **Ollama**), ChromaDB for vector storage, and LangChain for process orchestration. This project seamlessly combines document retrieval and query handling, enabling:
+
+- Contextually relevant responses to questions about uploaded documents.
+- General knowledge query answering.
+
+A sleek and intuitive dashboard enhances the user experience, making it easy to interact with the system.
+
+---
+
+## Screenshots
+
+### Homepage
+![Homepage](./images/photo_5.png)
+
+### Chat Interface
+![Chat Interface 1](./images/photo_6.png)
+![Chat Interface 2](./images/photo_7.png)
+![Chat Interface 3](./images/photo_8.png)
+
+---
 
 ## RAG Architecture
 
-The system combines the capabilities of document retrieval with LLM-based response generation. This integration ensures contextual accuracy by retrieving relevant documents from a vector database before generating responses.
+QueryPal integrates robust document retrieval capabilities with LLM-driven response generation to ensure accurate and context-aware answers. The process involves:
 
-- **Retriever**: Encodes and indexes external documents as vectors, enabling efficient similarity-based searches.
-- **Generator**: Uses **Llama 2.0 (via Ollama)** to generate responses based on retrieved documents or general knowledge.
+- **Retriever**: Encoding and indexing external documents into vectors for similarity-based searches.
+- **Generator**: Using **Llama 2.0 (via Ollama)** to generate responses based on retrieved documents or pre-trained knowledge.
 
-LangChain orchestrates this pipeline, streamlining the retrieval-generation workflow.
+LangChain orchestrates the workflow, ensuring a seamless integration of these components.
+
+![RAG Architecture](./images/RAG_arch_2.png)
+
+---
 
 ## Features
 
-- **General Query Handling**: Answers questions based on the inherent knowledge of **Llama 2.0 accessed via Ollama**, even if the question is not related to uploaded documents.
-- **Document Database Creation**: Stores documents as high-dimensional vectors using ChromaDB.
-- **Embedding Generation**: Transforms textual data into numerical representations with HuggingFace embeddings.
-- **Vector Database**: Supports similarity searches and document retrieval.
-- **Retriever Integration**: Fetches relevant documents based on query embeddings.
-- **QA System**: Generates accurate, context-aware answers using Llama 2.0 through Ollama.
+- **General Queries**: Answers a wide range of questions using Llama 2.0’s built-in knowledge, even without uploaded documents.
+- **Document-Based Q&A**: Delivers precise, context-aware answers by analyzing uploaded documents.
 
+---
 
 ## How It Works
 
-1. **Embedding Creation**: Generates document embeddings with HuggingFace.
-2. **Data Persistence**: Stores embeddings in a directory for reuse.
-3. **Vector Database Setup**: Builds a ChromaDB vector database for retrieval.
-4. **Retriever Initialization**: Fetches relevant documents for queries.
-5. **General Query Handling**: Answers questions unrelated to the provided documents using **Llama 2.0's pre-trained knowledge via Ollama**.
-6. **LLM Integration**: Uses **Llama 2.0 (via Ollama)** for deterministic, context-aware answers.
-7. **QA Pipeline**: Combines retriever and generator using LangChain.
+1. **Embedding Creation**: Generates document embeddings using HuggingFace.
+2. **Data Persistence**: Stores embeddings for future use.
+3. **Vector Database**: Builds a ChromaDB-based vector database for efficient retrieval.
+4. **Retriever Initialization**: Fetches relevant documents for user queries.
+5. **General Query Handling**: Leverages Llama 2.0 to answer questions unrelated to uploaded documents.
+6. **LLM Integration**: Ensures deterministic, contextually relevant answers using **Llama 2.0 (via Ollama)**.
+7. **Q&A Pipeline**: Combines the retriever and generator components via LangChain.
 
+---
 
 ## Project Structure
 
-- **Data Loading**: Parses and processes textual data.
-- **Database Creation**: Builds and stores vectorized documents.
-- **Query Processing**: Handles retrieval-based and general queries.
-- **Model Integration**: Integrates Llama 2.0 for answer generation.
+- **Frontend**: Developed with React, featuring Redux for state management and React Router for navigation. The UI is intuitive and user-friendly.
+- **Backend**: Built on Flask, hosting the RAG stack and exposing necessary APIs.
 
-
+---
 
 ## Getting Started
 
-### Cloning the Repository
+### Clone the Repository
 
 ```bash
-git clone https://github.com/your-repo-name/RAG-Document-QA.git
-cd RAG-Document-QA
+git clone git@github.com:ankitrajput0096/RAG-Document-QA-using-LLAMA2-ChromaDB.git
+cd QueryPal-Personalized-AI-Friend
 ```
 
+---
+
 ## Building the Application
-### With Docker
+
+### Using Docker
 
 1. Build the Docker image:
    ```bash
@@ -64,20 +88,24 @@ cd RAG-Document-QA
    ```bash
    docker-compose up
    ```
-### Directly running RAG Application docker image 
-1. Start the Docker containers:
+
+### Running the Pre-Built Docker Image
+
+1. Start the containers with:
    ```bash
    docker-compose -f docker-compose-run.yml up
    ```
 
-## Interacting with the RAG Application
+---
+
+## Interacting with the Backend APIs
 
 ### Postman API Collection
 
-A [Postman collection](RAG_stack.postman_collection.json) is provided for easy interaction with the application. Import the collection into Postman and use the following endpoints:
+A [Postman collection](./RAG_backend/RAG_stack.postman_collection.json) is included for easy API interaction. Import the collection and use the following endpoints:
 
-1. **Ask a General Query**
-   - **Feature**: Handles queries unrelated to uploaded documents.
+1. **General Query**
+   - **Description**: Handles questions unrelated to uploaded documents.
    - **Endpoint**: `http://127.0.0.1:8090/ask_general_query`
    - **Method**: POST
    - **Request Body**:
@@ -86,20 +114,17 @@ A [Postman collection](RAG_stack.postman_collection.json) is provided for easy i
        "query": "What is the capital of USA?"
      }
      ```
-   **Screenshot**
-   ![photo_1.png](./images/photo_1.png)
+   ![Screenshot](./images/photo_1.png)
 
-2. **Upload a Document**
-   - **Feature**: Uploads documents for embedding and storage.
+2. **Upload Document**
+   - **Description**: Uploads documents for embedding and storage.
    - **Endpoint**: `http://127.0.0.1:8090/upload_document`
    - **Method**: POST
-   - **Request Body**: Form-data with the key `file`.
+   - **Request Body**: Form-data with key `file`.
+   ![Screenshot](./images/photo_2.png)
 
-   **Screenshot**
-   ![photo_2.png](./images/photo_2.png)
-
-3. **Perform Similarity Search**
-   - **Feature**: Finds content similar to the query in uploaded documents.
+3. **Similarity Search**
+   - **Description**: Finds content similar to a query in uploaded documents.
    - **Endpoint**: `http://127.0.0.1:8090/similarity_search`
    - **Method**: POST
    - **Request Body**:
@@ -108,11 +133,10 @@ A [Postman collection](RAG_stack.postman_collection.json) is provided for easy i
        "query": "Find content similar to this query."
      }
      ```
-   **Screenshot**
-   ![photo_3.png](./images/photo_3.png)
+   ![Screenshot](./images/photo_3.png)
 
-4. **Query a Document**
-   - **Feature**: Queries uploaded documents for specific information.
+4. **Query Document**
+   - **Description**: Queries uploaded documents for specific information.
    - **Endpoint**: `http://127.0.0.1:8090/query_document`
    - **Method**: POST
    - **Request Body**:
@@ -121,7 +145,22 @@ A [Postman collection](RAG_stack.postman_collection.json) is provided for easy i
        "query": "What is the content of the document?"
      }
      ```
-   **Screenshot**
-   ![photo_4.png](./images/photo_4.png)
+   ![Screenshot](./images/photo_4.png)
+
+5. **Upload and Query Text**
+   - **Description**: Uploads text and queries it simultaneously.
+   - **Endpoint**: `http://127.0.0.1:8090/text_and_query`
+   - **Method**: POST
+   - **Request Body**:
+     ```json
+     {
+       "text": "Summary of A Brief History of Data Visualization...",
+       "query": "What were the changes during the 1850–1900 Golden Age of statistical graphics?"
+     }
+     ```
+   ![Screenshot](./images/photo_9.png)
 
 ---
+
+This README ensures a clear understanding of QueryPal’s features and usage. Feel free to reach out with questions or suggestions!
+
