@@ -70,7 +70,7 @@ LangChain orchestrates the workflow, ensuring a seamless integration of these co
 ### Clone the Repository
 
 ```bash
-git clone git@github.com:ankitrajput0096/RAG-Document-QA-using-LLAMA2-ChromaDB.git
+git clone git@github.com:ankitrajput0096/QueryPal-Personalized-AI-Friend.git
 cd QueryPal-Personalized-AI-Friend
 ```
 
